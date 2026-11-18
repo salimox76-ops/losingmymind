@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useBirthday } from '../../context/BirthdayContext';
-import { Sparkles, Shield, Heart, Compass, ChevronRight, Edit3 } from 'lucide-react';
+import { Sparkles, Shield, Heart, ChevronRight, Edit3 } from 'lucide-react';
 
 interface JourneyMilestone {
   category: string;
@@ -30,10 +30,10 @@ const DEFAULT_MILESTONES: JourneyMilestone[] = [
     title: "Handling Bad Days Together",
     timeframe: "Through Everything",
     story:
-      "Whenever one of us was stressed out, tired, or in a terrible mood, we learned how to deal with it. No drama, just being there, listening, and giving each other space when needed.",
+      "We've been through quite a lot together. Some problems affected us both, while others were things one of us had to deal with personally. But whatever it was, we always found a way to face it together. We talked things through, stayed close, and even when we needed some space from each other, we always found our way back. We never gave up on each other. And whenever I felt frustrated, angry, stressed, or just overwhelmed, you were there to help me through it.",
     reflection:
       "Being able to talk through things without making it weird proved we're an actual team.",
-    lesson: "What I learned: Having someone who has your back when things get frustrating is everything."
+    lesson: "It taught me that being together isn't just about sharing the good moments. It's also about choosing to stay, understanding each other, and working through the difficult ones. I'm genuinely thankful to have someone like you by my side, someone I can count on even when things aren't easy."
   },
   {
     category: "Milestone 3",
@@ -41,10 +41,10 @@ const DEFAULT_MILESTONES: JourneyMilestone[] = [
     title: "Games, Calls & Normal Life",
     timeframe: "Every Day",
     story:
-      "All the small stuff: screensharing on Discord, you yelling at your Briar games, sending each other dumb memes, and arguing about who's ordering what food.",
+      "A lot of our time together is spent doing the simplest things. I usually start the day by messaging you on Instagram, checking on you, and sometimes going back to sleep afterwards. Then we get on Discord, talk about how our day is going, how we're feeling, and just enjoy each other's company.\n\nWe play League together, with you on Briar mid and me on Viego jungle. Even when our games don't go as planned, I still enjoy playing with you. I like watching you play, even when you don't listen to my advice. After League, we sometimes listen to music, play other games together, or watch movies and shows.\n\nAnd at the end of the day, there's usually another call or more messages. Sometimes you even fall asleep while we're still on the phone. These little routines have become a normal part of my days, and honestly, they're some of my favourite parts.",
     reflection:
       "Honestly, the random ordinary days are the ones I like most.",
-    lesson: "What I learned: You don't need fancy plans when you're with the right person."
+    lesson: "It made me realize that I don't need every moment with you to be something special or planned. Even doing ordinary things together feels different when it's with you. I genuinely enjoy having you as part of my everyday life, and I wouldn't trade these little routines for anything."
   },
   {
     category: "Milestone 4",
@@ -52,10 +52,10 @@ const DEFAULT_MILESTONES: JourneyMilestone[] = [
     title: "Turning 21",
     timeframe: "November 23, 2026",
     story:
-      "And now you're officially 21. Seeing how much we've both grown since that first awkward text is crazy to think about. I'm really proud of who you are.",
+      "And now you're officially 21. Seeing how much we've both grown since that first awkward text message is crazy. It's amazing to think about how things developed and how much we've been through together. I'm really proud of the person you've become and the person you're becoming, and I'm just genuinely grateful to have you in my life.",
     reflection:
       "You're turning 21, and I'm just happy I get to be here celebrating with you.",
-    lesson: "What I learned: You're my favourite person, and that hasn't changed for a second."
+    lesson: "There's still so much ahead of us. So much more for us to experience, learn, and become. I hope we get to look back years from now and see just how far we've come, knowing this was only the beginning."
   }
 ];
 
@@ -77,6 +77,21 @@ export const Chapter3Journey: React.FC = () => {
         };
         localStorage.setItem(migrationKey, 'true');
       }
+      const approvedMilestoneMigrations = [
+        { index: 1, key: 'bday_journey_milestone_2_approved_copy_v1' },
+        { index: 2, key: 'bday_journey_milestone_3_approved_copy_v1' },
+        { index: 3, key: 'bday_journey_milestone_4_approved_copy_v1' }
+      ];
+      approvedMilestoneMigrations.forEach(({ index, key }) => {
+        if (!localStorage.getItem(key) && parsed[index] && DEFAULT_MILESTONES[index]) {
+          parsed[index] = {
+            ...parsed[index],
+            story: DEFAULT_MILESTONES[index].story,
+            lesson: DEFAULT_MILESTONES[index].lesson
+          };
+          localStorage.setItem(key, 'true');
+        }
+      });
       return parsed;
     } catch {
       return DEFAULT_MILESTONES;
@@ -199,7 +214,7 @@ export const Chapter3Journey: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="text-white/60 block mb-1">What this taught us / Reflection:</label>
+                <label className="text-white/60 block mb-1">Side Text:</label>
                 <textarea
                   rows={3}
                   value={current.lesson}
@@ -244,11 +259,7 @@ export const Chapter3Journey: React.FC = () => {
 
               {/* Reflection & Key Lesson Box (5 cols) */}
               <div className="lg:col-span-5 flex flex-col gap-4">
-                <div className="rounded-xl bg-[#230716]/60 border border-[#f43f5e]/30 p-5 flex flex-col gap-3">
-                  <div className="flex items-center gap-2 text-xs font-mono text-[#fb7185] uppercase tracking-wider">
-                    <Compass className="w-4 h-4 text-[#fb7185]" />
-                    <span>What It Taught Us / Reflection</span>
-                  </div>
+                <div className="rounded-xl bg-[#230716]/60 border border-[#f43f5e]/30 p-5">
                   <p className="font-serif italic text-sm sm:text-base text-[#ffe4e6] leading-relaxed">
                     {current.lesson}
                   </p>
