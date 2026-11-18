@@ -7,10 +7,13 @@ export const CatCursor: React.FC = () => {
   const trailContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Disable on touch devices
-    if (window.matchMedia('(pointer: coarse)').matches) {
+    // Keep the native pointer hidden while the custom cat cursor is active.
+    if (!isCatCursorActive || window.matchMedia('(pointer: coarse)').matches) {
       return;
     }
+
+    const root = document.documentElement;
+    root.classList.add('cat-cursor-active');
 
     let mouseX = -100;
     let mouseY = -100;
@@ -104,6 +107,7 @@ export const CatCursor: React.FC = () => {
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       cancelAnimationFrame(rafId);
+      root.classList.remove('cat-cursor-active');
     };
   }, [isCatCursorActive]);
 
