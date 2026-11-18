@@ -19,10 +19,10 @@ const DEFAULT_MILESTONES: JourneyMilestone[] = [
     title: "Late Night Calls & No Sleep",
     timeframe: "Late Nights",
     story:
-      "We went from that awkward first message to talking until 4 AM almost every night. Neither of us wanted to hang up first, even when we had to wake up early the next day.",
+      "Even back when we were just friends, I'd stay up talking to you, even when I knew I had to wake up early or had things to do the next day. Somehow, I never really minded losing sleep over it. I genuinely enjoyed talking to you, and what was supposed to be a short conversation would turn into hours.",
     reflection:
-      "It became obvious pretty quickly that talking to you was the highlight of my day.",
-    lesson: "What I learned: When you find someone you actually want to talk to for hours, you hold on to them."
+      "I didn't know what you'd become to me, but I knew I didn't want those conversations to end.",
+    lesson: "I think that's when I first started realizing you were someone special to me. Even before I fully understood what you would become in my life, talking to you was already something I looked forward to. You were special to me from the very beginning."
   },
   {
     category: "Milestone 2",
@@ -65,7 +65,19 @@ export const Chapter3Journey: React.FC = () => {
   const [milestones, setMilestones] = useState<JourneyMilestone[]>(() => {
     try {
       const saved = localStorage.getItem('bday_journey_milestones');
-      return saved ? JSON.parse(saved) : DEFAULT_MILESTONES;
+      if (!saved) return DEFAULT_MILESTONES;
+      const parsed = JSON.parse(saved) as JourneyMilestone[];
+      const migrationKey = 'bday_journey_late_nights_reflection_v1';
+      if (!localStorage.getItem(migrationKey) && parsed.length > 0) {
+        parsed[0] = {
+          ...parsed[0],
+          story: DEFAULT_MILESTONES[0].story,
+          reflection: DEFAULT_MILESTONES[0].reflection,
+          lesson: DEFAULT_MILESTONES[0].lesson
+        };
+        localStorage.setItem(migrationKey, 'true');
+      }
+      return parsed;
     } catch {
       return DEFAULT_MILESTONES;
     }
@@ -235,7 +247,7 @@ export const Chapter3Journey: React.FC = () => {
                 <div className="rounded-xl bg-[#230716]/60 border border-[#f43f5e]/30 p-5 flex flex-col gap-3">
                   <div className="flex items-center gap-2 text-xs font-mono text-[#fb7185] uppercase tracking-wider">
                     <Compass className="w-4 h-4 text-[#fb7185]" />
-                    <span>What We Discovered</span>
+                    <span>What It Taught Us / Reflection</span>
                   </div>
                   <p className="font-serif italic text-sm sm:text-base text-[#ffe4e6] leading-relaxed">
                     {current.lesson}
