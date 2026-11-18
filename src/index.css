@@ -1,6 +1,14 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Hide the operating-system cursor so only the custom cat cursor is visible. */
+html.cat-cursor-active,
+html.cat-cursor-active *,
+html.cat-cursor-active *::before,
+html.cat-cursor-active *::after {
+  cursor: none !important;
+}
+
 @layer base {
   :root {
     --font-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
